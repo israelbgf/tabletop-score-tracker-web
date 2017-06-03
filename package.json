@@ -11,12 +11,14 @@
     "react-tap-event-plugin": "^2.0.1"
   },
   "devDependencies": {
+    "json-server": "^0.10.1",
     "react-scripts": "1.0.7"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "init-fake-backend": "json-server --watch fake-backend.json --port 3004"
   }
 }
