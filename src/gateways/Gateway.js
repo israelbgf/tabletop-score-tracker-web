@@ -1,4 +1,4 @@
-import {AppSettings} from "./AppSettings"
+import {AppSettings} from "../AppSettings"
 
 class MatchGatewayRemote {
 

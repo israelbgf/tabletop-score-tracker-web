@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {withRouter} from 'react-router'
-import {MatchGatewayRemote} from "./Gateway";
+import {MatchGatewayRemote} from "../../gateways/Gateway";
 import {AppBar} from "material-ui";
 
 class Ranking extends Component {
