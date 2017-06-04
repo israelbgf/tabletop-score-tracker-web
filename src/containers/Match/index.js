@@ -100,7 +100,7 @@ class Match extends Component {
 
                         <br/>
 
-                        {this.renderResultTable()}
+                        {this.state.data.get("showResults") && <MatchResult/>}
                     </div>
                 </div>
             </div>
@@ -111,9 +111,6 @@ class Match extends Component {
         this.setState({data: this.state.data.set("showResults", true)});
     }
 
-    renderResultTable() {
-        return this.state.data.get("showResults") ? <MatchResult/> : <div/>
-    }
 }
 
 export default Match;
