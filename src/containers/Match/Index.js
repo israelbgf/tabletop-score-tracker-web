@@ -9,7 +9,8 @@ import {AppBar} from "material-ui";
 import {GameGatewayRemote, PlayerGatewayRemote} from "../../gateways/Gateway";
 import Immutable, {List, Map} from 'immutable'
 
-class Match extends Component {
+
+class MatchContainer extends Component {
 
     constructor(props) {
         super(props);
@@ -17,7 +18,7 @@ class Match extends Component {
             data: Immutable.fromJS({
                 showResults: false,
                 players: [
-                    {name: ""}
+                    {name: "", rawScore: "", score: 0, winner: false}
                 ],
                 playersToSuggest: [],
                 gamesToSuggest: [],
@@ -25,6 +26,7 @@ class Match extends Component {
         };
 
         this.onChangePlayerName = this.onChangePlayerName.bind(this)
+        this.onChangePlayerScore = this.onChangePlayerScore.bind(this)
     }
 
     componentDidMount() {
@@ -34,11 +36,15 @@ class Match extends Component {
             .then((gamesToSuggest) => this.setState({data: this.state.data.setIn(['gamesToSuggest'], List(gamesToSuggest))}))
     }
 
+    onChangePlayerScore(playerIndex, score) {
+        this.setState({data: this.state.data.setIn(['players', playerIndex, 'rawScore'], score)})
+    }
+
     onChangePlayerName(playerIndex, playerName) {
         let players = this.state.data.get('players');
         players = players.setIn([playerIndex, "name"], playerName)
         if (players.size === playerIndex + 1)
-            players = players.push(Map({name: ""}))
+            players = players.push(Map({name: "", rawScore: "", score: 0, winner: false}))
 
         this.setState({data: this.state.data.setIn(['players'], players)})
     }
@@ -83,12 +89,13 @@ class Match extends Component {
                                                   filter={AutoComplete.fuzzyFilter}
                                                   dataSource={playersToSuggest}
                                                   searchText={player.name}
-                                                  onUpdateInput={(playerName) => this.onChangePlayerName(index, playerName)}
+                                                  onUpdateInput={(text) => this.onChangePlayerName(index, text)}
                                                   openOnFocus={true}
                                                   fullWidth={true}/>
                                 </div>
                                 <div className="column">
                                     <TextField hintText="0 + 3 + 15" floatingLabelText="Score" style={scoreStyle}
+                                               onChange={(event, text) => this.onChangePlayerScore(index, text)}
                                                fullWidth={true}/>
                                 </div>
                             </div>
@@ -100,7 +107,8 @@ class Match extends Component {
 
                         <br/>
 
-                        {this.state.data.get("showResults") && <MatchResult/>}
+                        {this.state.data.get("showResults") &&
+                        <MatchResult playersScore={this.state.data.get("players")}/>}
                     </div>
                 </div>
             </div>
@@ -113,4 +121,4 @@ class Match extends Component {
 
 }
 
-export default Match;
+export default MatchContainer;

@@ -2,6 +2,15 @@ import React, {Component} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
 class MatchResult extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: props.playersScore
+        };
+
+    }
+
     render() {
         return (
             <div>
@@ -15,30 +24,14 @@ class MatchResult extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr className="is-selected">
-                        <td>1th</td>
-                        <td>Israel</td>
-                        <td>38</td>
-                        <td>Winner</td>
-                    </tr>
-                    <tr className="is-selected">
-                        <td>1th</td>
-                        <td>Juan</td>
-                        <td>38</td>
-                        <td>Winner</td>
-                    </tr>
-                    <tr>
-                        <td>2nd</td>
-                        <td>Bob</td>
-                        <td>32</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>3rd</td>
-                        <td>Modesto</td>
-                        <td>20</td>
-                        <td></td>
-                    </tr>
+                    {this.state.data.map((player, index) => (
+                        <tr className={player.winner ? "is-selected" : ""} key={index}>
+                            <td>{player.position}</td>
+                            <td>{player.name}</td>
+                            <td>{player.score}</td>
+                            <td>{player.winner ? "winner" : ""}</td>
+                        </tr>
+                    )).toArray()}
                     </tbody>
                 </table>
                 <div id="store-result" style={{display: "flex-box"}}>
@@ -48,7 +41,7 @@ class MatchResult extends Component {
         );
     }
 
-    componentDidMount(){
+    componentDidMount() {
         document.querySelector('#store-result').scrollIntoView({
             behavior: 'smooth'
         })

@@ -4,7 +4,7 @@ import {
     Route,
 } from 'react-router-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import Match from "./containers/Match";
+import Match from "./containers/Match/Index";
 import {MuiThemeProvider} from "material-ui";
 import Ranking from "./containers/Ranking";
 
