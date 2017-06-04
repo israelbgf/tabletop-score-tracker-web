@@ -8,7 +8,7 @@ import MatchResult from "./MatchResult";
 import {AppBar} from "material-ui";
 import {GameGatewayRemote, PlayerGatewayRemote} from "../../gateways/Gateway";
 import Immutable, {List, Map} from 'immutable'
-
+import MatchRules from './Rules'
 
 class MatchContainer extends Component {
 
@@ -34,6 +34,10 @@ class MatchContainer extends Component {
             .then((playersToSuggest) => this.setState({data: this.state.data.setIn(['playersToSuggest'], List(playersToSuggest))}))
         GameGatewayRemote.fetchAllGames()
             .then((gamesToSuggest) => this.setState({data: this.state.data.setIn(['gamesToSuggest'], List(gamesToSuggest))}))
+
+        let scoreResult = document.querySelector('#store-result')
+        if(scoreResult)
+            scoreResult.scrollIntoView({ behavior: 'smooth'})
     }
 
     onChangePlayerScore(playerIndex, score) {
@@ -47,6 +51,12 @@ class MatchContainer extends Component {
             players = players.push(Map({name: "", rawScore: "", score: 0, winner: false}))
 
         this.setState({data: this.state.data.setIn(['players'], players)})
+    }
+
+    onClickShowResults() {
+        let players = MatchRules.computeWinner(this.state.data.get('players'))
+        let newState = this.state.data.setIn(['players'], players)
+        this.setState({data: newState});
     }
 
     render() {
@@ -102,23 +112,24 @@ class MatchContainer extends Component {
                         ))}
                         <div style={{display: "flex-box"}}>
                             <RaisedButton label="Show Results" primary={true} style={{marginTop: "20px"}}
-                                          onClick={this.showMatchResults.bind(this)}/>
+                                          onClick={this.onClickShowResults.bind(this)}/>
                         </div>
 
                         <br/>
 
                         {this.state.data.get("showResults") &&
-                        <MatchResult playersScore={this.state.data.get("players")}/>}
+                        <div>
+                            <MatchResult playersScore={this.state.data.get("players")}/>
+                            <div id="store-result" style={{display: "flex-box"}}>
+                                <RaisedButton label="Store Result" primary={true} style={{marginTop: "20px"}}/>
+                            </div>
+                        </div>
+                        }
                     </div>
                 </div>
             </div>
         );
     }
-
-    showMatchResults() {
-        this.setState({data: this.state.data.set("showResults", true)});
-    }
-
 }
 
 export default MatchContainer;
