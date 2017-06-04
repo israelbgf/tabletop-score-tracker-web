@@ -14,5 +14,49 @@
       "date": "2017-06-11",
       "winner_score": "98"
     }
+  ],
+  "player": [
+    {
+      "id": 1,
+      "name": "Israel"
+    },
+    {
+      "id": 2,
+      "name": "Juan"
+    },
+    {
+      "id": 3,
+      "name": "Hudolf"
+    },
+    {
+      "id": 4,
+      "name": "Modesto"
+    },
+    {
+      "id": 5,
+      "name": "Bianca"
+    }
+  ],
+  "game": [
+    {
+      "id": 1,
+      "name": "Scythe"
+    },
+    {
+      "id": 2,
+      "name": "Agricola"
+    },
+    {
+      "id": 3,
+      "name": "Mombasa"
+    },
+    {
+      "id": 4,
+      "name": "Ticket to Ride"
+    },
+    {
+      "id": 5,
+      "name": "PowerGrid"
+    }
   ]
 }

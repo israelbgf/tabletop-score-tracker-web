@@ -10,4 +10,28 @@ class MatchGatewayRemote {
 
 }
 
-export {MatchGatewayRemote}
+class PlayerGatewayRemote {
+
+    static fetchAllPlayers() {
+        return fetch(`${AppSettings.REMOTE_API}/player`).then(response => {
+            return response.json()
+        })
+    }
+
+}
+
+class GameGatewayRemote {
+
+    static fetchAllGames() {
+        return fetch(`${AppSettings.REMOTE_API}/game`).then(response => {
+            return response.json()
+        })
+    }
+
+}
+
+export {
+    MatchGatewayRemote,
+    PlayerGatewayRemote,
+    GameGatewayRemote
+}

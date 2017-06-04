@@ -42,7 +42,7 @@ class MatchResult extends Component {
                     </tbody>
                 </table>
                 <div id="store-result" style={{display: "flex-box"}}>
-                    <RaisedButton label="Store Result" primary={true} style={{"margin-top": "20px"}}/>
+                    <RaisedButton label="Store Result" primary={true} style={{marginTop: "20px"}}/>
                 </div>
             </div>
         );
