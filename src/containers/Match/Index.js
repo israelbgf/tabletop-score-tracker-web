@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import AutoComplete from 'material-ui/AutoComplete';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import MatchResult from "./MatchResult";
+import ResultTable from "./ResultTable";
 import {AppBar} from "material-ui";
 import {GameGatewayRemote, PlayerGatewayRemote} from "../../gateways/Gateway";
 import Immutable, {List, Map} from 'immutable'
@@ -27,6 +27,7 @@ class MatchContainer extends Component {
 
         this.onChangePlayerName = this.onChangePlayerName.bind(this)
         this.onChangePlayerScore = this.onChangePlayerScore.bind(this)
+        this.onSelectPlayer = this.onSelectPlayer.bind(this)
     }
 
     componentDidMount() {
@@ -36,8 +37,8 @@ class MatchContainer extends Component {
             .then((gamesToSuggest) => this.setState({data: this.state.data.setIn(['gamesToSuggest'], List(gamesToSuggest))}))
 
         let scoreResult = document.querySelector('#store-result')
-        if(scoreResult)
-            scoreResult.scrollIntoView({ behavior: 'smooth'})
+        if (scoreResult)
+            scoreResult.scrollIntoView({behavior: 'smooth'})
     }
 
     onChangePlayerScore(playerIndex, score) {
@@ -55,7 +56,12 @@ class MatchContainer extends Component {
 
     onClickShowResults() {
         let players = MatchRules.computeWinner(this.state.data.get('players'))
-        let newState = this.state.data.setIn(['players'], players)
+        let newState = Map({players, showResults: true})
+        this.setState({data: this.state.data.merge(newState)});
+    }
+
+    onSelectPlayer(playerIndex, player){
+        let newState = this.state.data.setIn(['players', playerIndex, 'winner'], !player.get('winner'))
         this.setState({data: newState});
     }
 
@@ -119,12 +125,11 @@ class MatchContainer extends Component {
 
                         {this.state.data.get("showResults") &&
                         <div>
-                            <MatchResult playersScore={this.state.data.get("players")}/>
+                            <ResultTable players={this.state.data.get("players")} onSelectPlayer={this.onSelectPlayer}/>
                             <div id="store-result" style={{display: "flex-box"}}>
                                 <RaisedButton label="Store Result" primary={true} style={{marginTop: "20px"}}/>
                             </div>
-                        </div>
-                        }
+                        </div>}
                     </div>
                 </div>
             </div>
