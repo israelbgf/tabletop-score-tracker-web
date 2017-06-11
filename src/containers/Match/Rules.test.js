@@ -21,6 +21,28 @@ it('computes the score correctly', () => {
     ))
 });
 
+it('computes the winner by highest score', () => {
+    let players = Immutable.fromJS([
+        {name: "Israel", rawScore: "100"},
+        {name: "Hudolf", rawScore: "0"},
+    ])
+
+    let result = MatchRules.computeScore(players, 'highest')
+
+    expect(result.getIn([0, 'winner'])).toBeTruthy()
+});
+
+it('lowest score may be configured to be the first place', () => {
+    let players = Immutable.fromJS([
+        {name: "Israel", rawScore: "100"},
+        {name: "Hudolf", rawScore: "0"},
+    ])
+
+    let result = MatchRules.computeScore(players, 'lowest')
+
+    expect(result.getIn([0, 'winner'])).toBeTruthy()
+});
+
 it('is resilient to incomplete math expressions', () => {
     let players = Immutable.fromJS([
         {name: "Israel", rawScore: "1  +0 +0+"},

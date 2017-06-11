@@ -3,11 +3,20 @@ function calculate(rawScore) {
     return result || 0
 }
 
+function descending(a, b) {
+    return b.get('score') - a.get('score')
+}
+
+function ascending(a, b) {
+    return a.get('score') - b.get('score')
+}
+
 class MatchRules {
-    static computeScore(players) {
+    static computeScore(players, victoryCondition) {
+        let sortOrder = victoryCondition === 'lowest' ? ascending : descending
         let ranking = players
             .map(player => player.set('score', calculate(player.get('rawScore'))))
-            .sort((a, b) => b.get('score') - a.get('score'))
+            .sort(sortOrder)
 
         let highestScore = ranking.get(0).get('score')
 
