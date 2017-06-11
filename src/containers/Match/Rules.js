@@ -1,5 +1,5 @@
 function calculate(rawScore) {
-    let result = eval(rawScore.replace(/[^\d*\/+\-]/g, '').replace(/[+\-*\/]$/, ''));
+    let result = eval(rawScore.replace(/[^\d*/+-]/g, '').replace(/[*/+-/]$/, ''));
     return result || 0
 }
 

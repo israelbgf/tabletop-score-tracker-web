@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
+import React from 'react';
 
 const ResultTable = ({players, onSelectPlayer}) => {
     return (
