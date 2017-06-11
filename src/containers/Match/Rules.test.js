@@ -9,7 +9,7 @@ it('computes the score correctly', () => {
         {name: "Modesto", rawScore: "0+0+3"}
     ])
 
-    let result = MatchRules.computeWinner(players)
+    let result = MatchRules.computeScore(players)
 
     expect(result).toEqual(Immutable.fromJS(
         [
@@ -19,4 +19,43 @@ it('computes the score correctly', () => {
             {name: "Israel", rawScore: "1+0+0", score: 1, winner: false},
         ]
     ))
+});
+
+it('is resilient to incomplete math expressions', () => {
+    let players = Immutable.fromJS([
+        {name: "Israel", rawScore: "1  +0 +0+"},
+        {name: "Juan", rawScore: "1+1+0-"},
+        {name: "Hudolf", rawScore: "0+1+2  /"},
+        {name: "Modesto", rawScore: "0+0+4  *"},
+    ])
+
+    let result = MatchRules.computeScore(players)
+
+    expect(result.get(0).get('score')).toEqual(4)
+    expect(result.get(1).get('score')).toEqual(3)
+    expect(result.get(2).get('score')).toEqual(2)
+    expect(result.get(3).get('score')).toEqual(1)
+});
+
+it('is resilient to text in the middle of the math', () => {
+    let players = Immutable.fromJS([
+        {name: "Israel", rawScore: "1 cow + 2 pigs"},
+    ])
+
+    let result = MatchRules.computeScore(players)
+
+    expect(result.get(0).get('score')).toEqual(3)
+});
+
+it('return 0 if something really wrong happens', () => {
+    let players = Immutable.fromJS([
+        {name: "Israel", rawScore: "{exploit: 'time to mess this eval'}"},
+        {name: "Israel", rawScore: "() => true"},
+        {name: "Israel", rawScore: "() da *&!@$##%$$ˆ)  $"},
+    ])
+
+    let result = MatchRules.computeScore(players)
+
+    expect(result.get(0).get('score')).toEqual(0)
+    expect(result.get(1).get('score')).toEqual(0)
 });

@@ -42,7 +42,9 @@ class MatchContainer extends Component {
     }
 
     onChangePlayerScore(playerIndex, score) {
-        this.setState({data: this.state.data.setIn(['players', playerIndex, 'rawScore'], score)})
+        let players = this.state.data.get('players')
+        let updatedScore = players.setIn([playerIndex, 'rawScore'], score)
+        this.setState({data: this.state.data.set('players', MatchRules.computeScore(updatedScore))})
     }
 
     onChangePlayerName(playerIndex, playerName) {
@@ -55,12 +57,11 @@ class MatchContainer extends Component {
     }
 
     onClickShowResults() {
-        let players = MatchRules.computeWinner(this.state.data.get('players'))
-        let newState = Map({players, showResults: true})
+        let newState = Map({showResults: true})
         this.setState({data: this.state.data.merge(newState)});
     }
 
-    onSelectPlayer(playerIndex, player){
+    onSelectPlayer(playerIndex, player) {
         let newState = this.state.data.setIn(['players', playerIndex, 'winner'], !player.get('winner'))
         this.setState({data: newState});
     }
