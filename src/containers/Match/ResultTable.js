@@ -13,15 +13,17 @@ const ResultTable = ({players, onSelectPlayer}) => {
                 </tr>
                 </thead>
                 <tbody>
-                {players.map((player, index) => (
-                    <tr className={player.get('winner') ? "is-selected" : ""} key={index}
-                        onClick={() => onSelectPlayer(index, player)}>
-                        <td>{index + 1}</td>
-                        <td>{player.get('name')}</td>
-                        <td>{player.get('score')}</td>
-                        <td>{player.get('winner') ? "winner" : ""}</td>
-                    </tr>
-                )).toArray()}
+                {players
+                    .filter(player => player.name !== '')
+                    .map((player, index) => (
+                        <tr className={player.get('winner') ? "is-selected" : ""} key={index}
+                            onClick={() => onSelectPlayer(index, player)}>
+                            <td>{index + 1}</td>
+                            <td>{player.get('name')}</td>
+                            <td>{player.get('score')}</td>
+                            <td>{player.get('winner') ? "winner" : ""}</td>
+                        </tr>
+                    )).toArray()}
                 </tbody>
             </table>
         </div>
