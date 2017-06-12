@@ -65,8 +65,8 @@ class MatchContainer extends Component {
     }
 
     onClickShowResults() {
-        let newState = Map({showResults: true})
-        this.setState({data: this.state.data.merge(newState)});
+        let showResults = !this.state.data.get('showResults');
+        this.setState({data: this.state.data.set('showResults', showResults)});
     }
 
     onSelectPlayer(playerIndex, player) {
@@ -91,6 +91,8 @@ class MatchContainer extends Component {
 
         let gamesToSuggest = this.state.data.get("gamesToSuggest").map(game => game.name).toJS()
         let playersToSuggest = this.state.data.get("playersToSuggest").map(player => player.name).toJS()
+
+        let resultButtonLabel = this.state.data.get("showResults") ? "Hide Results" : "Show Results"
 
         return (
             <div>
@@ -139,7 +141,7 @@ class MatchContainer extends Component {
                             </div>
                         ))}
                         <div style={{display: "flex-box"}}>
-                            <RaisedButton label="Show Results" primary={true} style={{marginTop: "20px"}}
+                            <RaisedButton label={resultButtonLabel} primary={true} style={{marginTop: "20px"}}
                                           onClick={this.onClickShowResults.bind(this)}/>
                         </div>
 
