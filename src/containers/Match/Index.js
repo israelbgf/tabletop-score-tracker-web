@@ -44,20 +44,6 @@ class MatchContainer extends Component {
             scoreResult.scrollIntoView({behavior: 'smooth'})
     }
 
-    onChangePlayerScore(playerIndex, rawScore) {
-        let victoryCondition = this.state.data.get('victoryCondition')
-        let updatedPlayers = this.state.data.setIn(['players', playerIndex, 'rawScore'], rawScore)
-
-        let validPlayerToComputeScore = updatedPlayers.get('players')
-            .filter(player => player.get('name'))
-        let updatedPlayersAndRanking = updatedPlayers.set(
-            'ranking',
-            MatchRules.computeScore(validPlayerToComputeScore, victoryCondition)
-        )
-
-        this.setState({data: updatedPlayersAndRanking})
-    }
-
     onChangePlayerName(playerIndex, playerName) {
         let players = this.state.data.get('players');
         players = players.setIn([playerIndex, "name"], playerName)
@@ -67,8 +53,15 @@ class MatchContainer extends Component {
         this.setState({data: this.state.data.setIn(['players'], players)})
     }
 
+    onChangePlayerScore(playerIndex, rawScore) {
+        let victoryCondition = this.state.data.get('victoryCondition')
+        let updatedPlayers = this.state.data.setIn(['players', playerIndex, 'rawScore'], rawScore)
+        this.updatePlayerScoreState(updatedPlayers, victoryCondition);
+    }
+
     onChangeVictoryConditionSelect(event, index, option) {
-        this.setState({data: this.state.data.setIn(['victoryCondition'], option)})
+        let newState = this.state.data.set('victoryCondition', option)
+        this.updatePlayerScoreState(newState, option)
     }
 
     onClickShowResults() {
@@ -79,6 +72,17 @@ class MatchContainer extends Component {
     onSelectPlayer(playerIndex, player) {
         let newState = this.state.data.setIn(['ranking', playerIndex, 'winner'], !player.get('winner'))
         this.setState({data: newState});
+    }
+
+    updatePlayerScoreState(currentState, victoryCondition) {
+        let validPlayerToComputeScore = currentState.get('players')
+            .filter(player => player.get('name'))
+        let updatedPlayersAndRanking = currentState.set(
+            'ranking',
+            MatchRules.computeScore(validPlayerToComputeScore, victoryCondition)
+        )
+
+        this.setState({data: updatedPlayersAndRanking})
     }
 
     render() {
