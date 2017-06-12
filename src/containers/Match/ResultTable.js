@@ -9,7 +9,7 @@ const ResultTable = ({players, onSelectPlayer}) => {
                     <th>Position</th>
                     <th>Player</th>
                     <th>Score</th>
-                    <th/>
+                    <th>Status</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -20,7 +20,7 @@ const ResultTable = ({players, onSelectPlayer}) => {
                             <td>{index + 1}</td>
                             <td>{player.get('name')}</td>
                             <td>{player.get('score')}</td>
-                            <td>{player.get('winner') ? "winner" : ""}</td>
+                            <td style={{width: "100px"}}>{player.get('winner') ? "winner" : "loser"}</td>
                         </tr>
                     )).toArray()}
                 </tbody>
