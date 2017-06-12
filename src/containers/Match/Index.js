@@ -19,8 +19,9 @@ class MatchContainer extends Component {
                 victoryCondition: "highest",
                 showResults: false,
                 players: [
-                    {name: "", rawScore: "", score: 0, winner: false}
+                    {name: "", rawScore: ""}
                 ],
+                ranking: [],
                 playersToSuggest: [],
                 gamesToSuggest: [],
             })
@@ -43,23 +44,30 @@ class MatchContainer extends Component {
             scoreResult.scrollIntoView({behavior: 'smooth'})
     }
 
-    onChangePlayerScore(playerIndex, score) {
+    onChangePlayerScore(playerIndex, rawScore) {
         let victoryCondition = this.state.data.get('victoryCondition')
-        let players = this.state.data.get('players')
-        let updatedScore = players.setIn([playerIndex, 'rawScore'], score)
-        this.setState({data: this.state.data.set('players', MatchRules.computeScore(updatedScore, victoryCondition))})
+        let updatedPlayers = this.state.data.setIn(['players', playerIndex, 'rawScore'], rawScore)
+
+        let validPlayerToComputeScore = updatedPlayers.get('players')
+            .filter(player => player.get('name'))
+        let updatedPlayersAndRanking = updatedPlayers.set(
+            'ranking',
+            MatchRules.computeScore(validPlayerToComputeScore, victoryCondition)
+        )
+
+        this.setState({data: updatedPlayersAndRanking})
     }
 
     onChangePlayerName(playerIndex, playerName) {
         let players = this.state.data.get('players');
         players = players.setIn([playerIndex, "name"], playerName)
         if (players.size === playerIndex + 1)
-            players = players.push(Map({name: "", rawScore: "", score: 0, winner: false}))
+            players = players.push(Map({name: "", rawScore: ""}))
 
         this.setState({data: this.state.data.setIn(['players'], players)})
     }
 
-    onChangeVictoryConditionSelect(event, index, option){
+    onChangeVictoryConditionSelect(event, index, option) {
         this.setState({data: this.state.data.setIn(['victoryCondition'], option)})
     }
 
@@ -69,7 +77,7 @@ class MatchContainer extends Component {
     }
 
     onSelectPlayer(playerIndex, player) {
-        let newState = this.state.data.setIn(['players', playerIndex, 'winner'], !player.get('winner'))
+        let newState = this.state.data.setIn(['ranking', playerIndex, 'winner'], !player.get('winner'))
         this.setState({data: newState});
     }
 
@@ -98,7 +106,8 @@ class MatchContainer extends Component {
 
                             </div>
                             <div className="column">
-                                <SelectField floatingLabelText="Victory Condition" value={this.state.data.get('victoryCondition')}
+                                <SelectField floatingLabelText="Victory Condition"
+                                             value={this.state.data.get('victoryCondition')}
                                              fullWidth={true} onChange={this.onChangeVictoryConditionSelect}>
                                     <MenuItem value={"highest"} primaryText="Highest"/>
                                     <MenuItem value={"lowest"} primaryText="Lowest"/>
@@ -134,7 +143,7 @@ class MatchContainer extends Component {
 
                         {this.state.data.get("showResults") &&
                         <div>
-                            <ResultTable players={this.state.data.get("players")} onSelectPlayer={this.onSelectPlayer}/>
+                            <ResultTable players={this.state.data.get("ranking")} onSelectPlayer={this.onSelectPlayer}/>
                             <div id="store-result" style={{display: "flex-box"}}>
                                 <RaisedButton label="Store Result" primary={true} style={{marginTop: "20px"}}/>
                             </div>

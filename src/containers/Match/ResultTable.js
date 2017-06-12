@@ -14,7 +14,6 @@ const ResultTable = ({players, onSelectPlayer}) => {
                 </thead>
                 <tbody>
                 {players
-                    .filter(player => player.get('name'))
                     .map((player, index) => (
                         <tr className={player.get('winner') ? "is-selected" : ""} key={index}
                             onClick={() => onSelectPlayer(index, player)}>
