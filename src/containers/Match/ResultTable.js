@@ -1,6 +1,8 @@
 import React from 'react';
+import {Map} from 'immutable'
+import {formatPosition} from './Util'
 
-const ResultTable = ({players, onSelectPlayer}) => {
+const ResultTable = ({players=Map(), onSelectPlayer}) => {
     return (
         <div>
             <table className="table">
@@ -17,7 +19,7 @@ const ResultTable = ({players, onSelectPlayer}) => {
                     .map((player, index) => (
                         <tr className={player.get('winner') ? "is-selected" : ""} key={index}
                             onClick={() => onSelectPlayer(index, player)}>
-                            <td>{index + 1}</td>
+                            <td>{formatPosition(index + 1)}</td>
                             <td>{player.get('name')}</td>
                             <td>{player.get('score')}</td>
                             <td style={{width: "100px"}}>{player.get('winner') ? "winner" : "loser"}</td>
