@@ -16,6 +16,7 @@ class MatchContainer extends Component {
         super(props);
         this.state = {
             data: Immutable.fromJS({
+                victoryCondition: "highest",
                 showResults: false,
                 players: [
                     {name: "", rawScore: "", score: 0, winner: false}
@@ -28,6 +29,7 @@ class MatchContainer extends Component {
         this.onChangePlayerName = this.onChangePlayerName.bind(this)
         this.onChangePlayerScore = this.onChangePlayerScore.bind(this)
         this.onSelectPlayer = this.onSelectPlayer.bind(this)
+        this.onChangeVictoryConditionSelect = this.onChangeVictoryConditionSelect.bind(this)
     }
 
     componentDidMount() {
@@ -42,9 +44,10 @@ class MatchContainer extends Component {
     }
 
     onChangePlayerScore(playerIndex, score) {
+        let victoryCondition = this.state.data.get('victoryCondition')
         let players = this.state.data.get('players')
         let updatedScore = players.setIn([playerIndex, 'rawScore'], score)
-        this.setState({data: this.state.data.set('players', MatchRules.computeScore(updatedScore))})
+        this.setState({data: this.state.data.set('players', MatchRules.computeScore(updatedScore, victoryCondition))})
     }
 
     onChangePlayerName(playerIndex, playerName) {
@@ -54,6 +57,10 @@ class MatchContainer extends Component {
             players = players.push(Map({name: "", rawScore: "", score: 0, winner: false}))
 
         this.setState({data: this.state.data.setIn(['players'], players)})
+    }
+
+    onChangeVictoryConditionSelect(event, index, option){
+        this.setState({data: this.state.data.setIn(['victoryCondition'], option)})
     }
 
     onClickShowResults() {
@@ -91,9 +98,10 @@ class MatchContainer extends Component {
 
                             </div>
                             <div className="column">
-                                <SelectField floatingLabelText="Victory Condition" value={1} fullWidth={true}>
-                                    <MenuItem value={1} primaryText="Highest"/>
-                                    <MenuItem value={2} primaryText="Lowest"/>
+                                <SelectField floatingLabelText="Victory Condition" value={this.state.data.get('victoryCondition')}
+                                             fullWidth={true} onChange={this.onChangeVictoryConditionSelect}>
+                                    <MenuItem value={"highest"} primaryText="Highest"/>
+                                    <MenuItem value={"lowest"} primaryText="Lowest"/>
                                 </SelectField>
                             </div>
                         </div>
