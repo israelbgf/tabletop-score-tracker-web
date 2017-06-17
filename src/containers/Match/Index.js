@@ -5,8 +5,8 @@ import AutoComplete from 'material-ui/AutoComplete';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import ResultTable from "./ResultTable";
-import {AppBar} from "material-ui";
-import {GameGatewayRemote, PlayerGatewayRemote} from "../../gateways/Gateway";
+import {AppBar, Snackbar} from "material-ui";
+import {GameGatewayRemote, MatchGatewayRemote, PlayerGatewayRemote} from "../../gateways/Gateway";
 import Immutable, {List, Map} from 'immutable'
 import MatchRules from './Rules'
 
@@ -24,12 +24,18 @@ class MatchContainer extends Component {
                 ranking: [],
                 playersToSuggest: [],
                 gamesToSuggest: [],
+                snackbar: {
+                    message: "",
+                    open: false
+                }
             })
         };
 
         this.onChangePlayerName = this.onChangePlayerName.bind(this)
         this.onChangePlayerScore = this.onChangePlayerScore.bind(this)
         this.onSelectPlayer = this.onSelectPlayer.bind(this)
+        this.onClickShowResults = this.onClickShowResults.bind(this)
+        this.onClickStoreResults = this.onClickStoreResults.bind(this)
         this.onChangeVictoryConditionSelect = this.onChangeVictoryConditionSelect.bind(this)
     }
 
@@ -67,6 +73,20 @@ class MatchContainer extends Component {
     onClickShowResults() {
         let showResults = !this.state.data.get('showResults');
         this.setState({data: this.state.data.set('showResults', showResults)});
+    }
+
+    onClickStoreResults() {
+        MatchGatewayRemote.createMatch(this.state.data.get('ranking').toJS())
+            .then(response => {
+                this.setState({
+                    data: this.state.data.merge({
+                        snackbar: {
+                            message: "New match stored",
+                            open: true
+                        }
+                    })
+                });
+            })
     }
 
     onSelectPlayer(playerIndex, player) {
@@ -142,7 +162,7 @@ class MatchContainer extends Component {
                         ))}
                         <div style={{display: "flex-box"}}>
                             <RaisedButton label={resultButtonLabel} primary={true} style={{marginTop: "20px"}}
-                                          onClick={this.onClickShowResults.bind(this)}/>
+                                          onClick={this.onClickShowResults}/>
                         </div>
 
                         <br/>
@@ -151,11 +171,17 @@ class MatchContainer extends Component {
                         <div>
                             <ResultTable players={this.state.data.get("ranking")} onSelectPlayer={this.onSelectPlayer}/>
                             <div id="store-result" style={{display: "flex-box"}}>
-                                <RaisedButton label="Store Result" primary={true} style={{marginTop: "20px"}}/>
+                                <RaisedButton label="Store Result" primary={true} style={{marginTop: "20px"}}
+                                              onClick={this.onClickStoreResults}/>
                             </div>
                         </div>}
                     </div>
                 </div>
+
+                <Snackbar
+                    open={this.state.data.getIn(['snackbar', 'open'])}
+                    message={this.state.data.getIn(['snackbar', 'message'])}
+                />
             </div>
         );
     }
