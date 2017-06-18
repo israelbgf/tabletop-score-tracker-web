@@ -1,11 +1,15 @@
-# TableTop Score Tracker
+# Tabletop Score Tracker
 
-The goal of this wonderful software is to aid nerd gamers to track theirs gamer group score with tabletop games. This is only the UI project.
+An open source solution for tracking your (and your friends) score at tabletop games.
 
 # Features
 
-- [ ] Create matches
-- [ ] Match history
-- [ ] Player/Match statistics
-- [ ] Online integration
-- [ ] Offline support
+-[ ] Works offline
+-[ ] Allow any game tracking
+-[ ] Matches History
+-[ ] Players Performance
+-[ ] Not complex by design, don't mess with the analogic magic of the tabletop games!
+
+# Disclaimer
+
+This is the web UI frontend.
